@@ -1,0 +1,55 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');  */
+
+@font-face {
+  font-family: 'Prompt';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/public/assets/fonts/Prompt-Regular.ttf');
+
+}
+
+
+html,body{
+  font-family: 'Prompt', sans-serif !important;
+  /* margin: 0px; */
+
+  
+}
+
+/* table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+} */
+
+table.tbMain, .tbMain th, .tbMain td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  height: 100%;
+}
+
+table.tbRadioGroup { 
+  border-bottom: 0px !important;
+
+} 
+table.tbRadioGroup td {
+  border-top: 0px !important;
+  border-left: 0px !important;
+  border-bottom: 0px !important;
+  
+}
+
+td[colspan="5"] {
+  padding: 0px  !important;
+
+
+}
+
+table.tbRadioGroup td:last-child {
+  border-right: 0px !important;
+}
+
+.responesiveDiv,
+.responesiveDiv>div{
+  height: 100%;
+}
