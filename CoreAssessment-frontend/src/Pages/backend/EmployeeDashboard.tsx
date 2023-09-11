@@ -264,7 +264,7 @@ function EmployeeDashboard() {
           <Box sx={{...styles.commonStyles,border:2}}>
               <Card sx={{ minWidth: 275,backgroundColor:'#CACFD2' }}>
                   <CardContent>                                  
-                      <Typography component='div' variant='h5'>คำอธิบธิายผลการประเมิน</Typography>                                                        
+                      <Typography component='div' variant='h5'>คำอธิบายผลการประเมิน</Typography>                                                        
                       <Typography sx={{ mt: 1.5 }} color="text.secondary" variant='body1'>
 
                           80~100% = เข้าใจอย่างถ่องแท้ สามารถทำงานได้อย่างเชี่ยวชาญ

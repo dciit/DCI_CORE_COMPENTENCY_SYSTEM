@@ -14,12 +14,13 @@ function AppSidebar() {
  const user_info:any = Cookies.get("user_info") 
  const name = user_info ? JSON.parse(user_info)[0].ShortName : ""
  const position_long = user_info ? JSON.parse(user_info)[0].SECT_Long : ""
+ //const position_short = user_info ? JSON.parse(user_info)[0].SECT_Short : ""
 //  const position = user_info ? JSON.parse(user_info)[0].Position : ""
  const dept = user_info ? JSON.parse(user_info)[0].DEPT_CD : ""
  const sect = user_info ?JSON.parse(user_info)[0].SECT_CD  : ""
  const group = user_info ? JSON.parse(user_info)[0].DVCD : ""
  const empPic = user_info ? JSON.parse(user_info)[0].EmpPic : ""
- const position = "SS"
+ const position:string = "SS"
 //   const dept = "40000"
 //  const sect = "40100"
 //  const group = "40110"
@@ -39,6 +40,8 @@ function AppSidebar() {
   const PostionManeger:string[] =["MG","AM"]
   const PositionGM:string[] = ["GM","SGM","AG"]
 
+  //const adminPosition:string = "HRDS"
+
     
 
   //const image:string = "http://dcidmc.dci.daikin.co.jp/PICTURE/" + empcode + ".JPG"
@@ -48,7 +51,11 @@ function AppSidebar() {
 
 
     useEffect(() => {
+        // if(position_short == adminPosition){
+        //     setpositionStatus("SS")
 
+        // }
+    
         if(PostionSupervisor.includes(position)){
             setdept(depts)   
             setsect(sects)
@@ -92,25 +99,33 @@ function AppSidebar() {
    
 
   return (
-    
+  
     <Sidebar
           
-            style={{ height: "100dvh", top: 'auto' }}
+            // style={{ height: trackingStep.trackingCount == "4" && position == "GM" ? "175dvh" : (
+            // trackingStep.trackingCount == "3" && position == "MG" ? "175dvh": 
+            // ( trackingStep.trackingCount == "2" && position == "SS" ? "175dvh": "100dvh")
+            // )
+   
+            style ={{ height:"100%"
+             , top: 'auto',color:'#6E6E6ECC' }}
             breakPoint="md"
-            backgroundColor={'white'}
+            backgroundColor={'#F6F7FF'}
+            
         >
             <Box sx={styles.avatarContainer}>
                 <Avatar sx={styles.avatar} alt="Masoud" src={empPic} />            
                 {!collapsed ?  <Typography  variant="body2" sx={styles.yourChannel}>{name}</Typography> : null}
-                {!collapsed ?  <Typography variant="body2" sx={{fontWeight:'bold'}}>{position_long}</Typography>: null}
-                {!collapsed ?  <Typography variant="body2" sx={{fontWeight:'bold'}}>ตำแหน่ง : {position}</Typography>: null}
+                {!collapsed ?  <Typography variant="body2" sx={{color:'black'}}>{position_long}</Typography>: null}
+                {!collapsed ?  <Typography variant="body2" sx={{color:'black'}}>ตำแหน่ง : {position}</Typography>: null}
             
             </Box>
             <Menu
                 menuItemStyles={{
                     button: ({active}) =>{
                         return {
-                            background: active ? '#EEEEEE' : 'transparent'
+                            background: active ? '#EEEEEE' : 'transparent',
+                            color:active? 'black' :''
                         }
                     }
                 }}>
@@ -124,7 +139,7 @@ function AppSidebar() {
                     <MenuItem active={activeMenuItem === `/backend/core-assessment/${dept}/${sect}` } component={<Link to={`/backend/core-assessment/${dept}/${sect}`}  />} onClick={()=>handleMenuClick(`/backend/core-assessment/${dept}/${sect}`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body2">ประเมินสมรรถนะ<br/>ความสามารถบุคคล</Typography></MenuItem> 
                     :
                        
-                    <MenuItem active={activeMenuItem === `/backend/core-assessment/${dept}` } component={<Link to={`/backend/core-assessment/${dept}`}  />} onClick={()=>handleMenuClick(`/backend/core-assessment/${dept}`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body2">ประเมินสมรรถนะ<br/>ความสามารถบุคคล</Typography></MenuItem> 
+                    <MenuItem  active={activeMenuItem === `/backend/core-assessment/${dept}` } component={<Link to={`/backend/core-assessment/${dept}`}  />} onClick={()=>handleMenuClick(`/backend/core-assessment/${dept}`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body2">ประเมินสมรรถนะ<br/>ความสามารถบุคคล</Typography></MenuItem> 
                                      
                 }
 
@@ -146,8 +161,9 @@ const styles = {
         height: 'auto'
     },
     yourChannel: {
-        mt: 1,
-        fontWeight:'bold'
+        mt: 2,
+        
+        color:'black'
         
     }
 }

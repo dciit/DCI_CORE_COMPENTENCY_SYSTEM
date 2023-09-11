@@ -7,7 +7,10 @@ import AppNavbar from "../shared/AppNavbar";
 function BackendLayout() {
   return (
     <>
+   
+  
       <CssBaseline />
+     
       <AppNavbar />
       <Box sx={styles.container}>
         <AppSidebar />
@@ -15,6 +18,8 @@ function BackendLayout() {
           <Outlet />
         </Box>
       </Box>
+    
+      
     </>
   );
 }

@@ -49,13 +49,13 @@ function AppNavbar() {
 
         <Box sx={{ flexGrow: 1 }} />
 
-
+{/* 
         <IconButton title="Notifications" color="secondary">
           <NotificationsOutlined />
         </IconButton>
         <IconButton title="Language" color="secondary">
           <LanguageOutlined />
-        </IconButton>
+        </IconButton> */}
         <IconButton
           size="large"
           aria-controls="menu"
@@ -64,9 +64,9 @@ function AppNavbar() {
           onClick={handleMenuOpen}
         >
           <Avatar
-            src="/public/assets/41210.jpg"
+            src="/public/assets/images/config.png"
             alt="Avatar"
-            sx={{ width: 28, height: 28 }}
+            sx={{ width: 50, height: 50 }}
           />
         </IconButton>
         <Menu
@@ -78,12 +78,12 @@ function AppNavbar() {
           <MenuItem onClick={handleMenuClose} sx={{ px: "30px" }}>
             <Person sx={{ fontSize: "16px", mr: "20px" }} /> Profile
           </MenuItem>
-          <MenuItem onClick={handleMenuClose} sx={{ px: "30px" }}>
+          {/* <MenuItem onClick={handleMenuClose} sx={{ px: "30px" }}>
             <Settings sx={{ fontSize: "16px", mr: "20px" }} /> Settings
           </MenuItem>
           <MenuItem onClick={handleMenuClose} sx={{ px: "30px" }}>
             <Money sx={{ fontSize: "16px", mr: "20px" }} /> Billing
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem onClick={handleLogout} sx={{ px: "30px" }}>
             <Logout sx={{ fontSize: "16px", mr: "20px" }} /> Logout
           </MenuItem>
@@ -95,7 +95,7 @@ function AppNavbar() {
 
 const styles = {
   AppBar: {
-    bgcolor: "teal",
+    bgcolor: "#536DFE",
   },
   appLogo: {
     borderRadius: 2,

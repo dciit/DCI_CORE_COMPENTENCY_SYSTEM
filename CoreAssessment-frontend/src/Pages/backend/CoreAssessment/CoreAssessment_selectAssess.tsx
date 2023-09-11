@@ -102,7 +102,7 @@ function CoreAssessment_selectAssess() {
       let navigate = useNavigate(); 
       const user_info:any = Cookies.get("user_info")
       const empcodeLogin:string = JSON.parse(user_info)[0].EmpCode
-      const empNameLogin:string = JSON.parse(user_info)[0].ShortName
+      // const empNameLogin:string = JSON.parse(user_info)[0].ShortName
 
 
       const dispatch = useDispatch();
@@ -177,12 +177,7 @@ function CoreAssessment_selectAssess() {
                 
                  })
               }             
-            
-           
-              
-
-            
-     
+                 
 
           }catch(error){
             console.log(error)
@@ -197,7 +192,7 @@ function CoreAssessment_selectAssess() {
    
         let payload  = {
           
-          IndicatorBy:empNameLogin,
+          IndicatorBy:empcodeLogin,
           EmpCode:trackingStep.trackingEmpCode,
           CoreLevel:trackingStep.trackingLevel
         
@@ -236,7 +231,6 @@ function CoreAssessment_selectAssess() {
       
   return (
    <>
-
     <Card sx={{ display: 'flex',mt:5,borderRadius:2,backgroundColor:'teal' }}>
       <Box sx={{ display: 'flex', alignItems: 'center',m:2 }}>
       <CardMedia
@@ -296,7 +290,7 @@ function CoreAssessment_selectAssess() {
         </Card>
     </Box>
     <Paper sx={{ width: "100%", overflow: "auto" ,mt:2}}>
-        <TableContainer sx={{maxHeight: 800 }}>
+        <TableContainer sx={{maxHeight: 'auto' }}>
           <Table className='tbMain' stickyHeader aria-label="sticky table"  >
             <TableHead>
                 <TableRow>

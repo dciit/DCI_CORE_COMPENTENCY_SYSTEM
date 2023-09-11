@@ -21,7 +21,8 @@ const theme = createTheme({
             main:green[500],
             light:green[50],
             dark:green[900]
-        }
+        },
+    
 
     },
     typography: {

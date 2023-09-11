@@ -65,9 +65,9 @@ function CoreAssessment_selectSetion() {
           <Grid container spacing={5} >
               {section.map((sections,index) =>(
                    
-                    <Grid item xs={6} key={index}>
+                    <Grid item xs={4} key={index}>
                       <Button variant="contained" 
-                       sx={{width:"80%",height:"80%",borderRadius:5,background:"tomato"}}
+                       sx={{width:"80%",height:"60%",borderRadius:5,background:"tomato"}}
                       onClick={() => selectSecetion(sections.grp_cd)}
                       >
                       <Typography variant="body1">{sections.dv_name} ({sections.grp_cd}) </Typography>

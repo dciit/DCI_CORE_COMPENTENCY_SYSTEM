@@ -147,7 +147,7 @@ function Dashboard() {
         
         
 
-          return <>  <Grid item xs={6} >
+          return <>  <Grid item xs={4} >
                       <Typography variant="body1">LEVEL {index+1}</Typography>    
                         <Bar data={data} >                         
                       </Bar>
