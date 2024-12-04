@@ -7,7 +7,7 @@ import storage from 'redux-persist/lib/storage'
 // Save state to localstorage auto  
 
 const persistConfig = {
-    key:'root',
+    key:'coreAssessment-root',
     storage,
     // whitelist:['cartReducer']
 }

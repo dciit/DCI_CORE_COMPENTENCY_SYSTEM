@@ -1,116 +1,158 @@
 import {useEffect, useState} from 'react'
-import { Avatar, Box, Typography } from "@mui/material"
-import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar"
+import { Avatar, Badge, Box, List, ListItemButton, ListItemIcon, Typography } from "@mui/material"
+import { Menu, MenuItem, Sidebar, SubMenu, useProSidebar } from "react-pro-sidebar"
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-
-//import {empPic,name,position_long,position,dept,sect,group} from "../../constant/authen.ts"
-
+import coreAssessment from '../../service/coreAssessment';
+import counterBadge from '../../service/counterBadge';
+import { Collapse } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import MailIcon from '@mui/icons-material/Mail';
+import AlarmIcon from '@mui/icons-material/Alarm';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import GroupIcon from '@mui/icons-material/Group';
+import SchoolIcon from '@mui/icons-material/School';
 function AppSidebar() {
+
+const { collapsed, toggleSidebar } = useProSidebar()
+
  const user_info:any = Cookies.get("user_info") 
+ const empcode = user_info ? JSON.parse(user_info)[0].EmpCode : ""
  const name = user_info ? JSON.parse(user_info)[0].ShortName : ""
  const position_long = user_info ? JSON.parse(user_info)[0].SECT_Long : ""
- //const position_short = user_info ? JSON.parse(user_info)[0].SECT_Short : ""
-//  const position = user_info ? JSON.parse(user_info)[0].Position : ""
- const dept = user_info ? JSON.parse(user_info)[0].DEPT_CD : ""
- const sect = user_info ?JSON.parse(user_info)[0].SECT_CD  : ""
- const group = user_info ? JSON.parse(user_info)[0].DVCD : ""
+ const position = user_info ? JSON.parse(user_info)[0].Position : ""
  const empPic = user_info ? JSON.parse(user_info)[0].EmpPic : ""
- const position:string = "SS"
-//   const dept = "40000"
-//  const sect = "40100"
-//  const group = "40110"
+//  const position:string = "GM"
+//  const empcode:string = "13257" 
+ //13257
+ //14766
 
 
 
-
-  const navigate = useNavigate();
-  const { collapsed, toggleSidebar } = useProSidebar()
+//   const navigate = useNavigate();
   const [activeMenuItem,setActiveMenuItem] = useState("")
-  const [depts,setdept] = useState<string>(dept)
-  const [sects,setsect] = useState<string>(sect)
-  const [groups,setgroup] = useState<string>(group)
+  const [collapsedMenu,setcollapsedMenu] = useState<boolean>(true)
+//   const [depts,setdept] = useState<string>(dept)
+//   const [sects,setsect] = useState<string>(sect)
+//   const [groups,setgroup] = useState<string>(group)
+
+  const [dept,setdept] = useState<string>("")
+  const [sect,setsect] = useState<string>("")
+  const [group,setgroup] = useState<string>("")
   const [postitonStatus,setpositionStatus] = useState<string>("")
-  const [position_number,setposition_number] = useState<string>("")
+//   const [position_number,setposition_number] = useState<string>("")
   const PostionSupervisor:string[] =["SE","SS","ST","SU"]
-  const PostionManeger:string[] =["MG","AM"]
-  const PositionGM:string[] = ["GM","SGM","AG"]
+  const PostionManeger:string[] =["MG","AM","AMG"]
+  const PositionGM:string[] = ["GM","SGM","AG","AGM","PD","DI"]
 
-  //const adminPosition:string = "HRDS"
 
-    
-
-  //const image:string = "http://dcidmc.dci.daikin.co.jp/PICTURE/" + empcode + ".JPG"
   const trackingStep = useSelector((state:any) => state.trackingStateReducer.trackingState);
+  const counterBadgeStep = useSelector((state:any) => state.counterBagdeStateReducer.counterBadgeState);
+
 
   const dispatch = useDispatch();
 
+  async function getCounterBadge(empcode:string) {
 
-    useEffect(() => {
-        // if(position_short == adminPosition){
-        //     setpositionStatus("SS")
+    const res:any = await counterBadge.getBadgeDev(empcode)
+        try{
+            dispatch({
+                type: "GET_COUNTER",
+                payload:{...counterBadgeStep,counterBadge_EVALUTED:res[0],counterBadge_APPROVE:res[1] } 
+                
+             })
 
-        // }
-    
+        }catch (error) {
+            console.log(error);
+        }
+        
+           
+  }
+
+
+  async function checkDvcdEmployeeFlowLogin(empcode:string) {
+    const res: any = await coreAssessment.getEmployeeFlowLogin(empcode)
+    try {
         if(PostionSupervisor.includes(position)){
-            setdept(depts)   
-            setsect(sects)
-            setgroup(groups)
+
+            setdept(res.employeeLoginDept)   
+            setsect(res.employeeLoginSect)
+            setgroup(res.employeeLoginGroup)
             setpositionStatus("SS")
-            setposition_number(groups)
+
+    
 
         }else if(PostionManeger.includes(position)){
-            setdept(depts)   
-            setsect(sects)
+
+            setdept(res.employeeLoginDept)   
+            setsect(res.employeeLoginSect)
             setpositionStatus("MG")
-            setposition_number(sect)
+         
+    
 
         }else if(PositionGM.includes(position)){
-         
-            setdept(depts)      
+            setdept(res.employeeLoginDept)      
             setpositionStatus("GM")
-            setposition_number(depts)
+    
+        }else{
+            setpositionStatus("ADMIN")
+      
         }
-        navigate("/backend/dashboard");
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+    useEffect(() => {
+        
+
+        checkDvcdEmployeeFlowLogin(empcode)
+        getCounterBadge(empcode)
+        setActiveMenuItem(window.location.pathname)
+
+      
+        //navigate("/backend/dashboard");
     }, [])
  
 
+
    const handleMenuClick = (menu:string) =>{
+        setActiveMenuItem(menu)
+        toggleSidebar()
+
         dispatch({
             type: "FIRST_TRACKING_STEP",
-            payload:{...trackingStep,trackingDept:dept,trackingSection:sect,trackingGroup:group} 
+            payload:{...trackingStep,trackingDeptFirstStep:dept,trackingDept:dept,trackingSection:sect,trackingGroup:group} 
         
        })
 
-         dispatch({
-            type: "GET_POSITION_NUMBER",
-            payload:{position:position,position_number:position_number} 
     
-         })
-        setActiveMenuItem(menu)
-        toggleSidebar()
+     
     }
 
 
    
 
   return (
-  
     <Sidebar
-          
-            // style={{ height: trackingStep.trackingCount == "4" && position == "GM" ? "175dvh" : (
-            // trackingStep.trackingCount == "3" && position == "MG" ? "175dvh": 
+        
+            // style={{ height: trackingStep.trackingCount == "4" && position == "GM" ? "90dvh" : (
+            // trackingStep.trackingCount == "3" && position == "MG" ? "120dvh": 
             // ( trackingStep.trackingCount == "2" && position == "SS" ? "175dvh": "100dvh")
-            // )
+            // ) }}
    
-            style ={{ height:"100%"
-             , top: 'auto',color:'#6E6E6ECC' }}
+            style ={{ height:"auto"
+             , top: 'auto',color:'black' }}
             breakPoint="md"
-            backgroundColor={'#F6F7FF'}
+            backgroundColor={'#FFFF'}
+            //#F6F7FF
             
         >
             <Box sx={styles.avatarContainer}>
@@ -124,29 +166,159 @@ function AppSidebar() {
                 menuItemStyles={{
                     button: ({active}) =>{
                         return {
-                            background: active ? '#EEEEEE' : 'transparent',
-                            color:active? 'black' :''
+                            background: active ? '#1877F214' : 'transparent',
+                            color:active? '#1877F2' :'#637381'
                         }
                     }
                 }}>
-                <MenuItem active={activeMenuItem === "/backend/dashboard" } component={<Link to="/backend/dashboard" />} onClick={()=>handleMenuClick("/backend/dashboard")} icon={<DashboardOutlinedIcon />}> <Typography variant="body2">Dashboard</Typography></MenuItem>
+
+                 {position == "ADMIN" ? <>
+                    <MenuItem active={activeMenuItem === "/CASAPP/backend/admin/DashBoard" } component={<Link to="/CASAPP/backend/admin/DashBoard" />} onClick={()=>handleMenuClick("/CASAPP/backend/admin/DashBoard")} icon={<DashboardIcon />}> <Typography variant="body1">Dash board</Typography></MenuItem>
+                    <MenuItem active={activeMenuItem === "/CASAPP/backend/admin/setAssessmentRound" } component={<Link to="/CASAPP/backend/admin/setAssessmentRound" />} onClick={()=>handleMenuClick("/CASAPP/backend/admin/setAssessmentRound")} icon={<AlarmIcon />}> <Typography variant="body1">รอบการประเมิน</Typography></MenuItem>
+                    <MenuItem active={activeMenuItem === "/CASAPP/backend/admin/ManageRoleAssessment" } component={<Link to="/CASAPP/backend/admin/ManageRoleAssessment" />} onClick={()=>handleMenuClick("/CASAPP/backend/admin/ManageRoleAssessment")} icon={<GroupIcon />}> <Typography variant="body1">Organization</Typography></MenuItem>
+                    <MenuItem active={activeMenuItem === "/CASAPP/backend/admin/employeeTrainingRecord" } component={<Link to="/CASAPP/backend/admin/employeeTrainingRecord" />} onClick={()=>handleMenuClick("/CASAPP/backend/admin/employeeTrainingRecord")} icon={<SchoolIcon />}> <Typography variant="body1">สรุปผลการอบรม</Typography></MenuItem>
+
+                    <Menu  
+                    
+                           menuItemStyles={{
+                            
+                            button: ({active}) =>{
+                                return {
+                                    background: active ? '#1877F214' : 'transparent',
+                                    color:active? '#1877F2' :'#637381'
+                                }
+                            }
+                        }}>
+                                   
+                        <SubMenu icon={<AssessmentIcon />} label="สรุปผลการประเมิน">
+              
+                                <Link
+                                    to={"/CASAPP/backend/admin/AssessmentRoundReport"}
+                                    className="menu-bars text-center"
+                                >
+                                    <MenuItem
+                                    active={
+                                        activeMenuItem ===
+                                        "/CASAPP/backend/admin/AssessmentRoundReport"
+                                    }
+                                    onClick={() =>
+                                        handleMenuClick(
+                                        "/CASAPP/backend/admin/AssessmentRoundReport"
+                                        )
+                                    }
+                                   
+                                    >
+                                    <Typography variant="body2">&nbsp;&nbsp; ระดับพนักงาน (LV 1-4)</Typography>
+                                      
+                                    </MenuItem>
+                                </Link>
+                            
+
+                                <Link
+                                to={"/CASAPP/backend/admin/AssessmentRoundReportManager"}
+                                className="menu-bars text-center"
+                                >
+                                <MenuItem
+                                    active={
+                                    activeMenuItem ===
+                                    "/CASAPP/backend/admin/AssessmentRoundReportManager"
+                                    }
+                                    onClick={() =>
+                                    handleMenuClick("/CASAPP/backend/admin/AssessmentRoundReportManager")
+                                    }
+                           
+                                >
+                                  <Typography variant="body2">ระดับผู้จัดการ (LV 5)</Typography>
+                                   
+                                
+                                </MenuItem>
+                                </Link>
+                        </SubMenu>
+            
+                    </Menu>
+
+
+                     
+                    </>
+
+                  : 
+                    <>
+                     <MenuItem active={activeMenuItem === "/CASAPP/backend/dashboard" } component={<Link to="/CASAPP/backend/dashboard" />} onClick={()=>handleMenuClick("/CASAPP/backend/dashboard")} icon={<DashboardOutlinedIcon />}> <Typography variant="body1">Dashboard</Typography></MenuItem>
                 
-                {postitonStatus == "SS" ?
+                            {postitonStatus == "SS" ?
+                                    
+                                <MenuItem active={activeMenuItem === `/CASAPP/backend/core-assessment/${dept}/${sect}/${group}` } component={<Link to={`/CASAPP/backend/core-assessment/${dept}/${sect}/${group}`}  />} onClick={()=>handleMenuClick(`/CASAPP/backend/core-assessment/${dept}/${sect}/${group}`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body2">ประเมินสมรรถนะ<br/>ความสามารถบุคคล</Typography></MenuItem> 
+                                : postitonStatus == "MG" ? 
+                                    
+                                <MenuItem active={activeMenuItem === `/CASAPP/backend/core-assessment/${dept}/${sect}` } component={<Link to={`/CASAPP/backend/core-assessment/${dept}/${sect}`}  />} onClick={()=>handleMenuClick(`/CASAPP/backend/core-assessment/${dept}/${sect}`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body2">ประเมินสมรรถนะ<br/>ความสามารถบุคคล</Typography></MenuItem> 
+                                :
+                                
+                                <MenuItem  active={activeMenuItem === `/CASAPP/backend/core-assessment/` } component={<Link to={`/CASAPP/backend/core-assessment/`}  />} onClick={()=>handleMenuClick(`/CASAPP/backend/core-assessment/`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body1">ประเมินความสามารถ</Typography></MenuItem> 
+                                                
+                            }
+
+                    <MenuItem  onClick={() => (setcollapsedMenu(!collapsedMenu))} icon={<AssignmentIndOutlinedIcon />}> 
+                            
+                        <Typography display="inline" variant="body1">ประเมินและอนุมัติ</Typography>
                         
-                    <MenuItem active={activeMenuItem === `/backend/core-assessment/${dept}/${sect}/${group}` } component={<Link to={`/backend/core-assessment/${dept}/${sect}/${group}`}  />} onClick={()=>handleMenuClick(`/backend/core-assessment/${dept}/${sect}/${group}`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body2">ประเมินสมรรถนะ<br/>ความสามารถบุคคล</Typography></MenuItem> 
-                    : postitonStatus == "MG" ? 
-                        
-                    <MenuItem active={activeMenuItem === `/backend/core-assessment/${dept}/${sect}` } component={<Link to={`/backend/core-assessment/${dept}/${sect}`}  />} onClick={()=>handleMenuClick(`/backend/core-assessment/${dept}/${sect}`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body2">ประเมินสมรรถนะ<br/>ความสามารถบุคคล</Typography></MenuItem> 
-                    :
-                       
-                    <MenuItem  active={activeMenuItem === `/backend/core-assessment/${dept}` } component={<Link to={`/backend/core-assessment/${dept}`}  />} onClick={()=>handleMenuClick(`/backend/core-assessment/${dept}`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body2">ประเมินสมรรถนะ<br/>ความสามารถบุคคล</Typography></MenuItem> 
-                                     
+                        <Typography display="inline" variant="body1" >  &nbsp;   {collapsedMenu ? <ExpandLessIcon style={{margin:-7}}/> : <ExpandMoreIcon style={{margin:-7}}/>}</Typography>
+                    </MenuItem>
+                            
+                    <Collapse in={collapsedMenu} timeout="auto" unmountOnExit>
+                        <List >
+                            <ListItemButton >
+                                <ListItemIcon style={{marginLeft:-10,paddingLeft:2}}>
+
+                                        <MenuItem   active={activeMenuItem === `/CASAPP/backend/core-assessmentList` } component={<Link to={`/CASAPP/backend/core-assessmentList`}  />} onClick={()=>handleMenuClick(`/CASAPP/backend/core-assessmentList`)}>  
+                                        {!collapsed ?  <Typography display="inline" variant="body2"> รายการที่ประเมินแล้ว (Evaluted)</Typography>: <MailIcon/>}
+
+                                        </MenuItem> 
+                                        <Badge badgeContent={counterBadgeStep.counterBadge_EVALUTED} color="error" ></Badge>
+
+                                </ListItemIcon>
+                            </ListItemButton>
+
+                            <ListItemButton >
+                                <ListItemIcon style={{marginLeft:-10,paddingLeft:2}}>
+                                    {postitonStatus == "GM" ? <>
+                                    
+                                        <MenuItem active={activeMenuItem === `/CASAPP/backend/core-assessmentListApprove-gm` } component={<Link to={`/CASAPP/backend/core-assessmentListApprove-gm`}  />} 
+                                            onClick={()=>handleMenuClick(`/CASAPP/backend/core-assessmentListApprove-gm`)} > 
+                                            {!collapsed ?  <Typography display="inline" variant="body2"> รายการอนุมัติ (Approve)</Typography>: <MailIcon/>}
+                                        
+                                        </MenuItem> 
+                                    </> : <>
+                                    
+                                        <MenuItem active={activeMenuItem === `/CASAPP/backend/core-assessmentListApprove/` } component={<Link to={`/CASAPP/backend/core-assessmentListApprove/`}  />} 
+                                            onClick={()=>handleMenuClick(`/CASAPP/backend/core-assessmentListApprove/`)} > 
+                                            {!collapsed ?  <Typography display="inline" variant="body2"> รายการอนุมัติ (Approve)</Typography>: <MailIcon/>}
+                                        
+                                    </MenuItem> 
+                                    
+                                    </>}
+                                    
+                                    <Badge badgeContent={counterBadgeStep.counterBadge_APPROVE} color="error" ></Badge>
+                                </ListItemIcon>
+                            </ListItemButton>         
+                        </List>
+                                
+                    </Collapse>
+                    </>
                 }
 
-                {/* <MenuItem active={activeMenuItem === `/backend/core-assessment/${dept}` } component={<Link to={`/backend/core-assessment/${dept}`}  />} onClick={()=>handleMenuClick(`/backend/core-assessment/${dept}`)} icon={<AssessmentOutlinedIcon />}> <Typography variant="body2">ประเมินสมรรถนะ<br/>ความสามารถบุคคล</Typography></MenuItem> */}
-                <MenuItem active={activeMenuItem === `/backend/core-assessmentList` } component={<Link to={`/backend/core-assessmentList`} />} onClick={()=>handleMenuClick(`/backend/core-assessmentList`)} icon={<AssignmentIndOutlinedIcon />}> <Typography variant="body2">รายการผู้รับการประเมิน </Typography></MenuItem>
+               
+
+             
+             
+                
+            
+
+                {/* <MenuItem active={activeMenuItem === `/backend/core-assessmentList` } component={<Link to={`/backend/core-assessmentList`} />} onClick={()=>handleMenuClick(`/backend/core-assessmentList`)} icon={<AssignmentIndOutlinedIcon />}> <Typography variant="body2">รายการผู้รับการประเมิน  {collapsed ? <ExpandLessIcon /> : <ExpandMoreIcon />}</Typography> </MenuItem> */}
+
+
             </Menu >
         </Sidebar >
+
   )
 }
 const styles = {
@@ -155,14 +327,14 @@ const styles = {
         alignItems: "center",
         flexDirection: 'column',
         my: 5
+        
     },
     avatar: {
         width: '40%',
         height: 'auto'
     },
     yourChannel: {
-        mt: 2,
-        
+    
         color:'black'
         
     }

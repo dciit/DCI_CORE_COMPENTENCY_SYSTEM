@@ -1,85 +1,105 @@
-import {useEffect, useState} from 'react'
-import SrvCoreAssessment from "../../../service/coreAssessment.ts"
+import { useEffect, useState } from "react";
+import SrvCoreAssessment from "../../../service/coreAssessment.ts";
 import { useSelector, useDispatch } from "react-redux";
 // import Cookies from "js-cookie";
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { Typography } from "@mui/material"
-import { useNavigate  } from "react-router-dom";
-
+import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 
 export interface IGroup {
-    dv_name : string;
-    grp_cd : string;
-  }
-
-function CoreAssessment_selectSetion() {
-    let navigate = useNavigate(); 
-    const dispatch = useDispatch();
-  
-  
-    
-    const trackingStep = useSelector((state:any) => state.trackingStateReducer.trackingState);
-    const [section,setsection] = useState<IGroup[]>([]);
-  
-    useEffect(() => {
-      
-      dispatch({
-        type: "PREVIOUS_TRACKING_STEP",
-        payload:{...trackingStep,
-          trackingCount:0,
-          trackingDept:trackingStep.trackingDept,
-          trackingSection:''} 
-      
-       })
-
-
-      SrvCoreAssessment.getSection(trackingStep.trackingDept).then((res)=>{
-        try{
-            setsection(res.data)
-         
-        }catch(error){
-          console.log(error)
-        }
-      })
-    }, [])
-  
-  
-    const selectSecetion = (section:string) => {
-      dispatch({
-        type: "NEXT_TRACKING_STEP",
-        payload:{...trackingStep,trackingSection:section} 
-      
-       })
-      navigate(`/backend/core-assessment/${trackingStep.trackingDept}/${section}`)
-      
-    }
-    
-  
-    return (
-      <>
-           <Box sx={{ '& button': { p: 4 , m:5 },
-               overflow: "hidden",
-               overflowY: "hidden" }}>
-          <Grid container spacing={5} >
-              {section.map((sections,index) =>(
-                   
-                    <Grid item xs={4} key={index}>
-                      <Button variant="contained" 
-                       sx={{width:"80%",height:"60%",borderRadius:5,background:"tomato"}}
-                      onClick={() => selectSecetion(sections.grp_cd)}
-                      >
-                      <Typography variant="body1">{sections.dv_name} ({sections.grp_cd}) </Typography>
-                        </Button>
-                    </Grid>
-                  
-              
-              ))}
-          </Grid>
-          </Box>
-      </>
-    )
+  dv_name: string;
+  grp_cd: string;
 }
 
-export default CoreAssessment_selectSetion
+function CoreAssessment_selectSetion() {
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // const PositionGM:string[] = ["GM","SGM","AG"]
+  const trackingStep = useSelector(
+    (state: any) => state.trackingStateReducer.trackingState
+  );
+  const authenStep = useSelector(
+    (state: any) => state.authenStateReducer.userAuthenData.empcode
+  );
+  const [section, setsection] = useState<IGroup[]>([]);
+
+  useEffect(() => {
+    dispatch({
+      type: "PREVIOUS_TRACKING_STEP",
+      payload: {
+        ...trackingStep,
+        trackingCount: 1,
+        trackingDeptFirstStep: trackingStep.trackingDeptFirstStep,
+        trackingDept: trackingStep.trackingDept,
+        trackingSection: "",
+      },
+    });
+
+    // if(authenStep.position.includes(PositionGM)) {
+    //   SrvCoreAssessment.getSection(trackingStep.trackingDept).then((res)=>{
+    //     try{
+    //         setsection(res.data)
+
+    //     }catch(error){
+    //       console.log(error)
+    //     }
+    //   })
+    // }else{
+    //   SrvCoreAssessment.getGroup(trackingStep.trackingDept).then((res)=>{
+    //     try{
+    //         setsection(res.data)
+
+    //     }catch(error){
+    //       console.log(error)
+    //     }
+    //   })
+    // }
+
+    SrvCoreAssessment.getSection(authenStep, trackingStep.trackingDept).then(
+      (res) => {
+        try {
+          setsection(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    );
+  }, []);
+
+  const selectSecetion = (section: string) => {
+    dispatch({
+      type: "NEXT_TRACKING_STEP",
+      payload: { ...trackingStep, trackingSection: section },
+    });
+    navigate(
+      `/CASAPP/backend/core-assessment/${trackingStep.trackingDept}/${section}`
+    );
+  };
+
+  return (
+    <>
+      <Box
+        sx={{
+          "& button": { p: 2, m: 3 },
+          overflow: "hidden",
+          overflowY: "hidden",
+        }}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 md:gap-4">
+          {section.map((sections) => (
+            <div>
+              <button
+                className="w-[80%] h-[60%] rounded-2xl bg-indigo-500 text-lg text-white hover:scale-105 transition-all duration-400 cursor-pointer select-none shadow-lg"
+                onClick={() => selectSecetion(sections.grp_cd)}
+              >
+                 ({sections.grp_cd}) {sections.dv_name}
+              </button>
+            </div>
+          ))}
+        </div>
+      </Box>
+    </>
+  );
+}
+
+export default CoreAssessment_selectSetion;

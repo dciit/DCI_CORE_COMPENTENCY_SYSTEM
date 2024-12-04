@@ -21,10 +21,31 @@ export interface ApproveData{
 }
 
 
-const getBarChart = async () => {
-  return await http.COMPETENCY_ACCSCCMENT_API.get(`/AssessmentDashboard/getAssessmentDashboardBarChart`);
+const getBarChart = async (empcode:string) => {
+  return await http.COMPETENCY_ACCSCCMENT_API.get(`/AssessmentDashboard/getDashboardBarChart/${empcode}`);
 
 }
+
+
+const getPieChart = async (code:string) => {
+  return await http.COMPETENCY_ACCSCCMENT_API.get(`/AssessmentDashboard/getGadgetCardDashboard/${code}`);
+
+}
+
+
+export function getDashboards(payload:any) {
+  
+  return new Promise<any>(resolve => {
+     http.COMPETENCY_ACCSCCMENT_API.post(`/AssessmentDashboard/getDataDashboard`,payload).then((res) => {
+       resolve(res.data);
+     }).catch((e) => {
+       console.log(e);
+     });
+  })
+};
+
+
+
 
 
 
@@ -33,6 +54,7 @@ const getBarChart = async () => {
   
 export default {
     getBarChart,
+    getPieChart
 
 
 };

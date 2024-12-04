@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { position } from "../../../constant/authen.ts";
-import LooksOneIcon from '@mui/icons-material/LooksOne';
-import LooksTwoRoundedIcon from '@mui/icons-material/LooksTwoRounded';
-import Looks3RoundedIcon from '@mui/icons-material/Looks3Rounded';
-import Looks4RoundedIcon from '@mui/icons-material/Looks4Rounded';
-import Looks5RoundedIcon from '@mui/icons-material/Looks5Rounded';
+// import { position } from "../../../constant/authen.ts";
+import LooksOneIcon from "@mui/icons-material/LooksOne";
+import LooksTwoRoundedIcon from "@mui/icons-material/LooksTwoRounded";
+import Looks3RoundedIcon from "@mui/icons-material/Looks3Rounded";
+import Looks4RoundedIcon from "@mui/icons-material/Looks4Rounded";
+import Looks5RoundedIcon from "@mui/icons-material/Looks5Rounded";
+import coreAssessment from "../../../service/coreAssessment.ts";
+import Cookies from "js-cookie";
+
 function CoreAssessment_selectCore() {
   const trackingStep = useSelector(
     (state: any) => state.trackingStateReducer.trackingState
@@ -18,47 +18,53 @@ function CoreAssessment_selectCore() {
   const dispatch = useDispatch();
   let navigate = useNavigate();
 
-  const [statusCoreLevel, setstatusCoreLevel] = useState<string>("");
+  // const [statusCoreLevel, setstatusCoreLevel] = useState<string>("");
+  const [arrycoreLevel, setarrycoreLevel] = useState<number[]>([]);
   const corePositionLevel4: string[] = ["SE", "SS", "ST", "SU"];
   const corePositionLevel5_MG: string[] = ["MG", "AM"];
-  const corePositionLevel5_GM: string[] = ["GM", "SGM", "AG"];
-  // const authenStore = useSelector((state:any) => state.authenReducer.userAuthenData);
-
-  // const coreLevels = [
-  //   { LV: "LEVEL1", POSIT: "Operator, Operator.S,Leader 1-2, Leader.S" },
-  //   {
-  //     LV: "LEVEL2",
-  //     POSIT: "Foreman 1-3,Technician 2-3,Technician.S,Staff 1-4, Leader.S",
-  //   },
-  //   { LV: "LEVEL3", POSIT: "Engineer 2-4,Engineer.S" },
-  //   {
-  //     LV: "LEVEL4",
-  //     POSIT: "Supervisor 1-2, Supervisor.TeSupervisor.SF, Supervisor.EN",
-  //   },
-  //   { LV: "LEVEL5", POSIT: "Assistant Manager,Manager" },
-  // ];
+  // const corePositionLevel5_GM: string[] = ["GM", "SGM", "AG"];
+  const positionData = useSelector( (state: any) => state.authenStateReducer.userAuthenData);
 
   const coreLevels = [
-    { LV: "LEVEL1", POSIT_1: "Operator , Operator.S" , POSIT_2:"Leader 1-2 , Leader.S" },
+    {
+      LV: "LEVEL1",
+      POSIT_1: "Operator , Operator.S",
+      POSIT_2: "Leader, Leader.S",
+      icon: <LooksOneIcon sx={button_coreLevel} />,
+    },
     {
       LV: "LEVEL2",
-      POSIT_1: "Foreman 1-3 , Staff 1-4",
-      POSIT_2: "Technician 2-3 , Technician.S"
+      POSIT_1: "Foreman , Staff",
+      POSIT_2: "Technician , Technician.S",
+      icon: <LooksTwoRoundedIcon sx={button_coreLevel} />,
     },
-    { LV: "LEVEL3", POSIT_1: "Engineer 2-4 , Engineer.S" },
+    {
+      LV: "LEVEL3",
+      POSIT_1: "Engineer , Engineer.S",
+      icon: <Looks3RoundedIcon sx={button_coreLevel} />,
+    },
     {
       LV: "LEVEL4",
-      POSIT_1 : "Supervisor LV 1-2",
-      POSIT_2 : "Supervisor.Tecnichain",
-      POSIT_3 : "Supervisor.Staff",
-      POSIT_4 : "Supervisor.Engineer"
+      POSIT_1: "Supervisor",
+      POSIT_2: "Supervisor.Tecnichain",
+      POSIT_3: "Supervisor.Staff",
+      POSIT_4: "Supervisor.Engineer",
+      icon: <Looks4RoundedIcon sx={button_coreLevel} />,
     },
-    { LV: "LEVEL5", POSIT_1: "Assistant Manager , Manager" },
+    {
+      LV: "LEVEL5",
+      POSIT_1: "Assistant Manager , Manager",
+      icon: <Looks5RoundedIcon sx={button_coreLevel} />,
+    },
   ];
-  const POSITION: string = position;
+  const user_info: any = Cookies.get("user_info");
+  const POSITION: string = user_info ? JSON.parse(user_info)[0].Position : "";
+  // const POSITION: string = position;
 
   useEffect(() => {
-    if (POSITION == "SS") {
+    getCoreLevel(trackingStep.trackingGroup, POSITION);
+
+    if (corePositionLevel4.includes(POSITION)) {
       dispatch({
         type: "PREVIOUS_TRACKING_STEP",
         payload: {
@@ -70,7 +76,7 @@ function CoreAssessment_selectCore() {
           trackingLevel: "",
         },
       });
-    } else if (POSITION == "MG") {
+    } else if (corePositionLevel5_MG.includes(POSITION)) {
       dispatch({
         type: "PREVIOUS_TRACKING_STEP",
         payload: {
@@ -87,7 +93,7 @@ function CoreAssessment_selectCore() {
         type: "PREVIOUS_TRACKING_STEP",
         payload: {
           ...trackingStep,
-          trackingCount: 2,
+          trackingCount: 3,
           trackingDept: trackingStep.trackingDept,
           trackingSection: trackingStep.trackingSection,
           trackingGroup: trackingStep.trackingGroup,
@@ -96,21 +102,32 @@ function CoreAssessment_selectCore() {
       });
     }
 
-    //const position:String = JSON.parse(user_info)[0].Position
-
-    if (corePositionLevel4.includes(position)) {
-      setstatusCoreLevel("LV4");
-    } else if (corePositionLevel5_MG.includes(position)) {
-      setstatusCoreLevel("LV5_MG");
-    } else if (corePositionLevel5_GM.includes(position)) {
-      setstatusCoreLevel("LV5_GM");
-    }
+    // if (corePositionLevel4.includes(position)) {
+    //   setstatusCoreLevel("LV4");
+    // } else if (corePositionLevel5_MG.includes(position)) {
+    //   setstatusCoreLevel("LV5_MG");
+    // } else if (corePositionLevel5_GM.includes(position)) {
+    //   setstatusCoreLevel("LV5_GM");
+    // }
   }, []);
 
-  //const user_info:any = Cookies.get("user_info")
-  //const code:string = JSON.parse(user_info)[0].EmpCode
-  //const name:string = JSON.parse(user_info)[0].ShortName
+  async function getCoreLevel(dvcd: string, posit: string) {
+    const res: any = await coreAssessment.getCoreLevel(positionData.empcode,dvcd, posit);
+    try {
+      setarrycoreLevel(res);
 
+      //   res[0] == 1  ? <LooksOneIcon sx={button_coreLevel} /> :
+      //   (arrycoreLevel[index]  == 1 ? <LooksTwoRoundedIcon sx={button_coreLevel} /> :
+      //   ( arrycoreLevel[index]  == 2 ? <Looks3RoundedIcon sx={button_coreLevel}/> :
+      //   ( arrycoreLevel[index]  == 3 ? <Looks4RoundedIcon sx={button_coreLevel}/> :
+      //  <Looks5RoundedIcon sx={button_coreLevel}/>)))
+
+      // setfirstIndex(res[0]) // 2
+      // setlastIndex(res.length == 1 ? res.length + 2 : res.length + 1) //3
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const selectCore = (coreLevel: string) => {
     dispatch({
       type: "NEXT_TRACKING_STEP",
@@ -118,130 +135,47 @@ function CoreAssessment_selectCore() {
     });
 
     navigate(
-      `/backend/core-assessment/${trackingStep.trackingDept}/${trackingStep.trackingSection}/${trackingStep.trackingGroup}/${coreLevel}`
+      `/CASAPP/backend/core-assessment/${trackingStep.trackingDept}/${trackingStep.trackingSection}/${trackingStep.trackingGroup}/${coreLevel}`
     );
   };
 
   return (
     <>
-     
-      {statusCoreLevel == "LV4" ? (
-        <>
-          <Box
-            sx={{
-              "& button": { p: 4, m: 5 },
-              overflow: "hidden",
-              overflowY: "hidden",
-            }}
-          >
-          
-            <Grid container spacing={5}>
-              {coreLevels.slice(0, 3).map((core, index) => (
-                <Grid item xs={4} key={index}>
-                  <Button
-                    variant="contained"
-                    startIcon={ index == 0 ? <LooksOneIcon sx={button_coreLevel} /> : 
-                    (index == 1 ? <LooksTwoRoundedIcon sx={button_coreLevel} /> : <Looks3RoundedIcon sx={button_coreLevel}/>)}
-                    sx={{
-                      width: "80%",
-                      height: "60%",
-                      borderRadius: 5,
-                      background: "tomato"
-                      
-                    }}
-                    onClick={() =>
-                      selectCore(core.LV.slice(core.LV.length - 1))
-                    }
-                  >
-                    <Typography variant="body1">
-                      {core.POSIT_1} <br /> {core.POSIT_2}
-                    </Typography>
-                  </Button>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </>
-      ) : statusCoreLevel == "LV5_MG" ? (
-        <>
-          {" "}
-          <Box
-            sx={{
-              "& button": { p: 4, m: 5 },
-              overflow: "hidden",
-              overflowY: "hidden",
-            }}
-          >
-            <Grid container spacing={5}>
-              {coreLevels.slice(3, 4).map((core, index) => (
-                // `../assets/img/supplier/${driverCard.driverPicture}`
-                <Grid item xs={4} key={index}>
-                  <Button
-                    variant="contained"
-                    startIcon={<Looks4RoundedIcon sx={button_coreLevel}/>}
-                    sx={{
-                      width: "70%",
-                      height: "50%",
-                      borderRadius: 5,
-                      background: "tomato",
-                    }}
-                    onClick={() =>
-                      selectCore(core.LV.slice(core.LV.length - 1))
-                    }
-                  >
-                    <Typography variant="body1">
-                      {core.POSIT_1} <br /> {core.POSIT_2} <br /> {core.POSIT_3} <br />{core.POSIT_4}
-                    </Typography>
-                  </Button>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </>
-      ) : (
-        <>
-          {" "}
-          <Box
-            sx={{
-              "& button": { p: 4, m: 3 },
-              overflow: "hidden",
-              overflowY: "hidden",
-            }}
-          >
-            <Grid container spacing={2}>
-              {coreLevels.slice(4, 5).map((core, index) => (
-                // `../assets/img/supplier/${driverCard.driverPicture}`
-                <Grid item xs={4} key={index}>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: "80%",
-                      height: "50%",
-                      borderRadius: 5,
-                      background: "tomato",
-                    }}
-                    startIcon={<Looks5RoundedIcon sx={button_coreLevel} />}
-                    onClick={() =>
-                      selectCore(core.LV.slice(core.LV.length - 1))
-                    }
-                  >
-                    <Typography variant="body1">
-                     {core.POSIT_1}
-                    </Typography>
-                  </Button>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </>
-      )}
+      <Box
+        sx={{
+          "& button": { p: 2, m: 3 },
+          overflow: "hidden",
+          overflowY: "hidden",
+        }}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 md:gap-4">
+
+          {coreLevels.map(
+            (core, index) =>
+              arrycoreLevel.includes(index) && (
+                <div>
+                  <button className="w-[80%] h-[60%] shadow-lg rounded-2xl bg-indigo-500 text-lg text-white hover:scale-105    transition-all duration-400 cursor-pointer select-none py-2 px-4  inline-flex items-center"
+                   onClick={() =>
+                    selectCore(core.LV.slice(core.LV.length - 1))
+                  }>
+                    {core?.icon}
+                    <div className="text-start">
+                      <span>{core.POSIT_1}</span> {core.POSIT_2} {core.POSIT_3}{" "}
+                      <br /> {core.POSIT_4} <h1 />
+                    </div>
+                  </button>
+                </div>
+              )
+          )}
+        </div>
+      </Box>
     </>
   );
 }
 
 const button_coreLevel = {
-  height:100,
-  width:100
-}
+  height: 100,
+  width: 100,
+};
 
 export default CoreAssessment_selectCore;

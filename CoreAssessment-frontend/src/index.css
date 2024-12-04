@@ -1,5 +1,10 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');  */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 @font-face {
   font-family: 'Prompt';
   font-style: normal;
@@ -10,17 +15,18 @@
 }
 
 
-html,body{
+#root,html,body{
   font-family: 'Prompt', sans-serif !important;
   height: 100%;
   /* margin: 0px; */
 
   
 }
-
-#root{
-  height: 100%;
+.swal2-container.swal2-backdrop-show, .swal2-container.swal2-noanimation {
+  
+  z-index: 11000;
 }
+
 
 /* .css-baqms3{
   height: 100%;
@@ -34,7 +40,36 @@ html,body{
 table.tbMain, .tbMain th, .tbMain td {
   border: 1px solid black;
   border-collapse: collapse;
-  height: 100%;
+}
+
+table.tbEmployee, .tbEmployee th, .tbEmployee td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+}
+
+table.tbConfirm, .tbConfirm th, .tbConfirm td {
+  border: 1px solid gray;
+  border-collapse: collapse;
+  
+}
+
+table.tbApprove, .tbApprove th, .tbApprove td {
+  border: 1px solid gray;
+  border-collapse: collapse;
+  padding: 4px;
+}
+
+table.tbAdminMain, .tbAdminMain th, .tbAdminMain td {
+  border: 0.1px solid rgb(209 213 219);
+  border-collapse: collapse;
+  padding: 6px;
+}
+
+table.tbCompliance, .tbCompliance th, .tbCompliance td {
+  border: 1px solid black;
+   border-collapse: collapse;
+  padding: 4px;
 }
 
 table.tbRadioGroup { 
@@ -48,10 +83,13 @@ table.tbRadioGroup td {
   
 }
 
-td[colspan="5"] {
+td[colspan="6"] {
   padding: 0px  !important;
 
 
+}
+.ps-sidebar-container{
+  height: 100dvh !important; 
 }
 
 table.tbRadioGroup td:last-child {
@@ -63,7 +101,124 @@ table.tbRadioGroup td:last-child {
   height: 100%;
 }
 
+.MuiBadge-badge {
+  margin-right: 12px;
+}
+
+.MuiBadge-badge  {
+  margin-right: 5px;
+}
+
 .css-1p6iztw {
   margin-top: 10px !important;
   /* overflow: unset !important;  */
 }
+
+/* .css-heg063-MuiTabs-flexContainer {
+
+  display: flex;
+  justify-content: space-between;
+
+
+} */
+
+.MuiTabFlexBetween > div > div > div{
+  display: flex;
+  justify-content: space-between !important;
+}
+
+
+.datepickerColor > div > div > div{
+  background-color: #faffb3 !important;
+}
+
+@media print {
+  body {
+    /* transform: scale(0.5); */
+    /* margin-left: 1000px;
+    margin: 100px; */
+  }
+}
+
+.a4 {
+  width: 26cm;
+  /* height: 29.7cm; */
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  
+}
+
+
+
+
+/* .blinkColor-Approve {
+  width: 2px;
+  height: 2px;
+  animation-name: Approve;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes Approve {
+  0%   {background-color: white;}
+  100% {background-color: rgb(88, 190, 88);}
+} */
+
+.blinkColor-wait-Approve {
+  width: 2px;
+  height: 2px;
+  animation-name: wait-Approve;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes wait-Approve {
+  0%   {background-color: white;}
+  100% {background-color: rgb(rgb(255, 174, 25), 190, 9);}
+}
+
+
+
+
+
+/* .blinkColor-wait-Confirm {
+  width: 2px;
+  height: 2px;
+  animation-name: wait-Confirm;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes wait-Confirm {
+  0%   {background-color: white;}
+  100% {background-color: rgb(rgb(255, 174, 25), 190, 9);}
+} */
+
+.org-chart-container {
+  width: 100%;
+  height: 100vh; /* or any height you prefer */
+  overflow: auto; /* Allows scrolling if the content overflows */
+  display: flex;
+  justify-content: end;
+  margin-top: 50px;
+}
+
+.org-chart {
+  max-width: 100%; /* Ensures the chart doesn't overflow its container */
+  max-height: 100%; /* Ensures the chart doesn't overflow its container */
+  transform: scale(0.8); /* Example scaling, adjust as needed */
+  transform-origin: top left; /* Ensures scaling happens from the top-left corner */
+}
+
+/* Media query for different screen sizes */
+@media (max-width: 600px) {
+  .org-chart {
+    transform: scale(0.6); /* Adjust scaling for smaller screens */
+  }
+}
+
+

@@ -14,7 +14,7 @@ function BackendLayout() {
       <AppNavbar />
       <Box sx={styles.container}>
         <AppSidebar />
-        <Box component={"main"} sx={styles.mainSection}>
+        <Box component={"main"} sx={styles.mainSection}>         
           <Outlet />
         </Box>
       </Box>
@@ -30,11 +30,12 @@ const styles = {
     bgcolor: "neutral.light",
   },
   mainSection: {
-    mt:4,
-    px: 4,
+    mt:1,
+    px: 1,
+    pt:1,
     width: "100%",
     height: "100%",
-    overflow: "auto",
+    // overflow: "auto",
   },
 };
 

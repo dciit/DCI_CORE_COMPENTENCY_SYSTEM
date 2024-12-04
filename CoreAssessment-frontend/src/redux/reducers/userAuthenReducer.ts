@@ -11,6 +11,7 @@
 const initialData = {
 
     userAuthenData:{
+      empcode:'',
       postion:'',
       position_number:''
 
@@ -30,6 +31,8 @@ const initialData = {
       return{
        
         ...state,userAuthenData:{
+          empcode:action.payload.empcode,
+          name:action.payload.name,
           position:action.payload.position,
           position_number:action.payload.position_number
       

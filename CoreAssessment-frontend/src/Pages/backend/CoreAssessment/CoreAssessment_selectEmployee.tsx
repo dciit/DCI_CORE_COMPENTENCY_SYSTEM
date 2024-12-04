@@ -11,26 +11,18 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Button, Typography } from '@mui/material';
-import {position} from "../../../constant/authen.ts"
-
-
-export interface IEmployee {
-    code : string;
-    name : string;
-    surn : string;
-    posit : string;
-    grade:string;
-    status: boolean;
-  }
-  
+// import {position} from "../../../constant/authen.ts"
+import Cookies from "js-cookie";
+import { IEmployee } from '../../../Model/employeeInfo';
+import dayjs from 'dayjs';
 
 
   const columns = [
     { id: "empImgae", label: "รูปภาพ" },
-    { id: "empCode", label: "รหัสพนักงาน" },
-    { id: "empName", label: "ชื่อ-นามสกุล" },
+    { id: "empCode", label: "พนักงาน" },
+    { id: "empName", label: "อายุงาน" },
     { id: "empPosition", label: "ตำแหน่ง" },
-    { id: "empAction", label: "Action" },
+    { id: "empAction", label: "สถานะ" },
   
   ];
 
@@ -40,12 +32,15 @@ function CoreAssessment_selectEmployee() {
 
   const dispatch = useDispatch();
   const trackingStep = useSelector((state:any) => state.trackingStateReducer.trackingState);
+  const timeOutAssessmentEmployee = useSelector((state: any) => state.timeoutCounterStateReducer.timeoutCounterState);
+
     const [employee,setEmployee] = useState<IEmployee[]>([])
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(8);
-  
-    const handleChangePage = (newPage:any) => {
+
+    //@ts-ignore
+    const handleChangePage = (event: unknown,newPage:any) => {
       setPage(newPage);
     };
   
@@ -54,14 +49,15 @@ function CoreAssessment_selectEmployee() {
       setPage(0);
     };
 
-    //const authenStore = useSelector((state:any) => state.authenReducer.userAuthenData);
-    const POSITION:string = position
+    const positionData = useSelector((state:any) => state.authenStateReducer.userAuthenData);
+    const user_info:any = Cookies.get("user_info") 
+    const POSITION : string = user_info ? JSON.parse(user_info)[0].Position : ""
     useEffect(() => {
-      if(POSITION == "GM"){
+      if(POSITION == "GM" || POSITION == "AGM" || POSITION == "SGM" || POSITION == "PD" || POSITION == "DI" || POSITION == "AG"){
         dispatch({
           type: "PREVIOUS_TRACKING_STEP",
           payload:{...trackingStep,
-            trackingCount:3,
+            trackingCount:4,
             trackingDept:trackingStep.trackingDept,
             trackingSection:trackingStep.trackingSection,
             trackingGroup:trackingStep.trackingGroup,
@@ -70,7 +66,7 @@ function CoreAssessment_selectEmployee() {
             } 
         
          })
-      }else if(POSITION == "MG"){
+      }else if(POSITION == "MG" || POSITION == "AMG" || POSITION == "AM"){
         dispatch({
           type: "PREVIOUS_TRACKING_STEP",
           payload:{...trackingStep,
@@ -92,14 +88,14 @@ function CoreAssessment_selectEmployee() {
             trackingSection:trackingStep.trackingSection,
             trackingGroup:trackingStep.trackingGroup,
             trackingLevel:trackingStep.trackingLevel,
-            trackingEmpCode: ''
+            trackingEmpCode: '' 
             } 
         
          })
       }
    
     
-        SrvCoreAssessment.getEmployee(trackingStep.trackingSection,trackingStep.trackingGroup,trackingStep.trackingLevel).then((res)=>{
+        SrvCoreAssessment.getEmployeeDev(positionData.empcode ,trackingStep.trackingSection,trackingStep.trackingGroup,trackingStep.trackingLevel).then((res)=>{
             try{
                 setEmployee(res.data)
              
@@ -107,27 +103,31 @@ function CoreAssessment_selectEmployee() {
               console.log(error)
             }
           })
+
+
+
      
     }, [])
 
+  
 
-    const CoreAssessment_selectEmployee = (code:string) =>{
+    const CoreAssessment_selectEmployee = (code:string,status:string) =>{
       dispatch({
         type: "NEXT_TRACKING_STEP",
-        payload:{...trackingStep,trackingEmpCode:code} 
+        payload:{...trackingStep,trackingEmpCode:code,trackingStatus:status} 
       
        })
        
-      navigate(`/backend/core-assessment/${trackingStep.trackingDept}/${trackingStep.trackingSection}/${trackingStep.trackingGroup}/${trackingStep.trackingLevel}/${code}`)
+      navigate(`/CASAPP/backend/core-assessment/${trackingStep.trackingDept}/${trackingStep.trackingSection}/${trackingStep.trackingGroup}/${trackingStep.trackingLevel}/${code}`)
     }
     
 
 
   return (
     <>
-    <Paper sx={{ width: "100%", overflow: "auto" ,mt:5}}>
+    <Paper sx={{ width: "100%", overflow: "auto" ,mt:2}}>
         <TableContainer sx={{ maxHeight: 1000 }}>
-          <Table stickyHeader aria-label="sticky table">
+          <Table stickyHeader aria-label="sticky table" className='tbEmployee'>
             <TableHead>
               <TableRow>
                 {columns.map((column, index) => (
@@ -141,7 +141,6 @@ function CoreAssessment_selectEmployee() {
               </TableRow>
             </TableHead>
             <TableBody>
-      
               {employee.length > 0 ? (
                 <>
                  {employee
@@ -149,16 +148,28 @@ function CoreAssessment_selectEmployee() {
                 .map((row, index) => (
                   <TableRow
                     key={index}
-                    // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    
-                     <TableCell><img src= {`http://dcidmc.dci.daikin.co.jp/PICTURE/${row.code}.JPG`} width={80} height={80} /></TableCell>
-                     <TableCell>{row.code}</TableCell>
-                     <TableCell>{row.name}</TableCell>
-                     <TableCell>{row.posit}&nbsp;{parseInt(row.grade) == 0 ? "" : row.grade}</TableCell>
-                     {!row.status ?  <TableCell><Button type='button' color="info" variant="contained" onClick={() => CoreAssessment_selectEmployee(row.code)}>ประเมิน</Button></TableCell> :
+
+                  >                    
+                     <TableCell><img src= {`http://dcidmc.dci.daikin.co.jp/PICTURE/${row.code}.JPG`} width={60} height={60} /></TableCell>
+                     <TableCell>
+                      {row.code}<br/>
+                      {row.name}
+                     </TableCell>
+                     <TableCell>
+                      {dayjs(row.joinDate).format("DD/MM/YYYY")} <br/>
+                      {/* {row.workingAge_TotalDay.toLocaleString()} วัน */}
+                      {row.workingAge_Year} ปี  {row.workingAge_Month} เดือน  {row.workingAge_Day} วัน 
+                     </TableCell>
+                     <TableCell>{row.posit} LV{parseInt(row.grade) == 0 ? "" : row.grade}</TableCell>
+                     {!row.status && !timeOutAssessmentEmployee.assessmentTimeout ?  
                      
-                     <TableCell><Button type='button' color="info" variant="contained" disabled>ประเมิน</Button></TableCell>
+                     <TableCell>
+                      {row.status_2 == 'Pending'  ? <Button type='button' color="warning" variant="contained" onClick={() => CoreAssessment_selectEmployee(row.code,row.status_2)}>แก้ไขประเมิน</Button> : 
+                      <Button sx={{width:100,height:50,fontSize:16}} type='button' color="info" variant="contained" onClick={() => CoreAssessment_selectEmployee(row.code,row.status_2)}>ประเมิน</Button>
+                     } 
+                     </TableCell>
+                     :
+                     <TableCell><Button type='button' color="info" variant="contained" disabled>{timeOutAssessmentEmployee.assessmentTimeout ? "หมดเวลาประเมิน" : "ประเมินแล้ว"}</Button></TableCell>
                      
                      }
                    

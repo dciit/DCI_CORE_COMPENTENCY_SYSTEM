@@ -9,17 +9,15 @@ import {
   Avatar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsOutlined from "@mui/icons-material/NotificationsOutlined";
-import LanguageOutlined from "@mui/icons-material/LanguageOutlined";
 import { useProSidebar } from "react-pro-sidebar";
-import { Logout, Money, Settings, Person } from "@mui/icons-material";
+import { Logout, Person } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { persistor } from "../../redux/store";
 
 function AppNavbar() {
   const navigate = useNavigate();
   const { collapseSidebar, toggleSidebar, broken } = useProSidebar();
-
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -32,8 +30,9 @@ function AppNavbar() {
   };
 
   const handleLogout = () => {
+      persistor.purge()
       Cookies.remove('user_info')
-      navigate("/");
+      navigate("CASAPP/");
   };
   return (
     <AppBar position="sticky" sx={styles.AppBar}>
@@ -45,17 +44,10 @@ function AppNavbar() {
           <MenuIcon />
         </IconButton>
       
-        <Box sx={{ ml: "20px", fontSize: "20px" }}>Compentency Assessment</Box>
+        <Box sx={{ ml: "20px"}}><h1 className="text-xl">Compentency Assessment (Knowledge)  <span className="bg-gray-100 rounded m-2 p-[2px] text-[12px] text-gray-600">V1.0.5</span></h1></Box>
 
         <Box sx={{ flexGrow: 1 }} />
 
-{/* 
-        <IconButton title="Notifications" color="secondary">
-          <NotificationsOutlined />
-        </IconButton>
-        <IconButton title="Language" color="secondary">
-          <LanguageOutlined />
-        </IconButton> */}
         <IconButton
           size="large"
           aria-controls="menu"
@@ -64,7 +56,8 @@ function AppNavbar() {
           onClick={handleMenuOpen}
         >
           <Avatar
-            src="/public/assets/images/config.png"
+             src="http://dciweb2.dci.daikin.co.jp/CASAPP/assets/images/config.png"
+            //src="http://127.0.0.1:5173/CASAPP/assets/images/config.png"
             alt="Avatar"
             sx={{ width: 50, height: 50 }}
           />
@@ -78,12 +71,6 @@ function AppNavbar() {
           <MenuItem onClick={handleMenuClose} sx={{ px: "30px" }}>
             <Person sx={{ fontSize: "16px", mr: "20px" }} /> Profile
           </MenuItem>
-          {/* <MenuItem onClick={handleMenuClose} sx={{ px: "30px" }}>
-            <Settings sx={{ fontSize: "16px", mr: "20px" }} /> Settings
-          </MenuItem>
-          <MenuItem onClick={handleMenuClose} sx={{ px: "30px" }}>
-            <Money sx={{ fontSize: "16px", mr: "20px" }} /> Billing
-          </MenuItem> */}
           <MenuItem onClick={handleLogout} sx={{ px: "30px" }}>
             <Logout sx={{ fontSize: "16px", mr: "20px" }} /> Logout
           </MenuItem>
