@@ -4,7 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @font-face {
   font-family: 'Prompt';
   font-style: normal;
@@ -41,6 +40,14 @@ table.tbMain, .tbMain th, .tbMain td {
   border: 1px solid black;
   border-collapse: collapse;
 }
+
+table.tbScheduleTIS, .tbScheduleTIS th, .tbScheduleTIS td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 8px;
+
+}
+
 
 table.tbEmployee, .tbEmployee th, .tbEmployee td {
   border: 1px solid black;
@@ -222,3 +229,8 @@ table.tbRadioGroup td:last-child {
 }
 
 
+.custom-large-tree .ant-tree-switcher {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+}

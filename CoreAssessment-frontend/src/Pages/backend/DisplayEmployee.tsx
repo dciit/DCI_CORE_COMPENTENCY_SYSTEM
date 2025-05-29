@@ -103,9 +103,9 @@ function DisplayEmployee() {
   const [saveAssessmentSub, setsaveAssessmentSub] = useState<AssessmentScore[]>([]);
 
   useEffect(() => {
-    console.log(DashboardPageStore)
     SrvCoreAssessment.getEmployeeForIndicator(DashboardPageStore.empcode).then((res:any) => {
       try {
+        console.log(res.data)
         setemployee(res.data);
       } catch (error) {
         console.log(error);

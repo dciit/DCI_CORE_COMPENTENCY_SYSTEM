@@ -7,5 +7,7 @@
 
         public string? Indicator_Name { get; set;}
         public string? Indicator_Category { get; set;}
+
+        public int? Scroe { get; set; }
     }
 }

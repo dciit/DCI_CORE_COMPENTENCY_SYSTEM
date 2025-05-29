@@ -23,6 +23,7 @@ import { useEffect, useState } from 'react';
 import { getDashboard } from '../../../service/admin';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import Skeleton from '@mui/material/Skeleton';
+import moment from "moment";
 
 ChartJS.register(
     ArcElement,
@@ -230,7 +231,7 @@ function AdminDashboard() {
    
     <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-6'> 
             <div className='w-full h-[600px] border border-gray shadow-2xl p-6 sm:col-span-1 md:col-span-1 lg:col-span-1 rounded-xl' >
-            <p className="text-xl font-bold">จำนวนพนักงานที่ประเมินในแผนก </p>
+            <p className="text-xl font-bold">จำนวนพนักงานที่ประเมินในแผนก ประจำปี {moment().year().toString()}</p>
 
                       <Bar
                        className="mt-10"
@@ -301,7 +302,7 @@ function AdminDashboard() {
 
             </div>
             <div className='w-full h-[600px] border border-gray shadow-2xl  p-6 grow rounded-xl' >
-            <p className="text-xl font-bold">จำนวนพนักงานที่ประเมิน Core Level</p>
+            <p className="text-xl font-bold">จำนวนพนักงานที่ประเมิน Core Level </p>
             <Doughnut data={data_donutChart} 
              options={{
               animation: {

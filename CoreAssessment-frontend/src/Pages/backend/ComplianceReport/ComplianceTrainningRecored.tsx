@@ -114,6 +114,9 @@ function ComplianceTrainningRecored() {
       return "Open Oct 1, 24";
     } else if (textSplit == "0" && index == 4) {
       return "Open Dec 2, 24";
+    } else if (textSplit == "0" && index == 5) {
+      return "Open Jul, 25";
+    
     } else {
       return textSplit + "%";
     }
@@ -150,15 +153,16 @@ function ComplianceTrainningRecored() {
 
   return (
     <>
+
       {loadAPI ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          marginTop={10}
-        >
-          <CircularProgress />
-        </Box>
+       <div
+                className="flex flex-col justify-center items-center h-screen w-screen gap-5 bg-slate-300"
+               > 
+               <div> <CircularProgress size={60}/></div>
+               <div> <p className="text-2xl"> กําลังโหลด ....</p></div>
+                
+               
+               </div>
       ) : (
         <>
           <div className="flex flex-col content-start p-10 bg-cyan-50 overflow-hidden">
@@ -239,12 +243,14 @@ function ComplianceTrainningRecored() {
             
             series={[
                   
-              { type: 'line', dataKey: 'percent', color: 'red',label:'ผ่าน', valueFormatter },
-              { type: 'bar', dataKey: 'cc001',  color:'#00bfff', yAxisId: 'leftAxis',label: 'Anti-Bribery',valueFormatter },
-              { type: 'bar', dataKey: 'cc002',  color:'orange', yAxisId: 'leftAxis',label: 'Trade Secret',valueFormatter },
-              { type: 'bar', dataKey: 'cc003',  color:'gray', yAxisId: 'leftAxis',label: 'PDPA',valueFormatter },
-              { type: 'bar', dataKey: 'cc004',  color: 'pink' ,yAxisId: 'leftAxis',label: 'Security export',valueFormatter },
-              { type: 'bar', dataKey: 'cc005',  color: 'purple' ,yAxisId: 'leftAxis', label: 'Whistle blowing',valueFormatter },
+              // { type: 'line', dataKey: 'percent', color: 'red',label:'ผ่าน', valueFormatter },
+              { type: 'bar', dataKey: 'cc001',  color:'#88A27C', yAxisId: 'leftAxis',label: 'Anti-Bribery',valueFormatter },
+              { type: 'bar', dataKey: 'cc002',  color:'#DDA9A0', yAxisId: 'leftAxis',label: 'Trade Secret',valueFormatter },
+              { type: 'bar', dataKey: 'cc003',  color:'#D6B55E', yAxisId: 'leftAxis',label: 'PDPA',valueFormatter },
+              { type: 'bar', dataKey: 'cc004',  color: '#5B8DB8' ,yAxisId: 'leftAxis',label: 'Security export',valueFormatter },
+              { type: 'bar', dataKey: 'cc005',  color: '#9B8FBF' ,yAxisId: 'leftAxis', label: 'Whistle blowing',valueFormatter },
+              { type: 'bar', dataKey: 'cc006',  color: '#FFB74D' ,yAxisId: 'leftAxis', label: 'Antitrust and competion',valueFormatter },
+
 
               
 
@@ -303,6 +309,7 @@ function ComplianceTrainningRecored() {
                   <th className="w-[5%]">PDPA</th>
                   <th className="w-[5%]">Security export control</th>
                   <th className="w-[5%]">Whistle blowing control</th>
+                  <th className="w-[5%]">Antitrust and competion</th>
                 </tr>
                 <tbody>
                   <tr>
@@ -316,7 +323,7 @@ function ComplianceTrainningRecored() {
                     </td>
                   </tr>
 
-                  <tr>
+                  <tr >
                     <td rowSpan={5}>
                       <p className="font-bold text-[18px] text-center">
                         {dataHeader[0]?.totalEmployee?.toLocaleString()}
@@ -324,17 +331,17 @@ function ComplianceTrainningRecored() {
                         (Update {dayjs(new Date()).format("DD/MM/YYYY")})
                       </p>
                     </td>
-                    <td>
+                    <td className="bg-yellow-100">
                       1. Employee complete 5 training courses within 5 year
                     </td>
-                    {[...Array(5)].map(() => {
+                    {[...Array(6)].map(() => {
                       return <td className="bg-yellow-100 text-center">100%</td>
                     })}
                   </tr>
 
              
 
-                  <tr>
+                  <tr >
                     <td>Actual</td>
                     {dataHeader.map((_empTotal: any, index) => {
                       return (
@@ -386,13 +393,13 @@ function ComplianceTrainningRecored() {
                     })}
                   </tr>
 
-                  <tr>
+                  {/* <tr>
                     <td className="bg-yellow-100 text-[15px]">
                       2. All departments send at least 25% of their employees to
                       attend each course per year.
                     </td>
 
-                    {[...Array(5)].map(() => {
+                    {[...Array(6)].map(() => {
                       return (
                         <td
                           rowSpan={2}
@@ -402,10 +409,12 @@ function ComplianceTrainningRecored() {
                         </td>
                       )
                     })}
-                  </tr>
-                  <tr>
+                  </tr> */}
+                  {/* <tr>
                     <td className="bg-yellow-100">Section/Actual</td>
-                  </tr>
+                  </tr> */}
+                  <tr></tr>
+                  <tr></tr>
 
                   {dataContent.map((content_dept: any) => {
                     return (
@@ -435,7 +444,7 @@ function ComplianceTrainningRecored() {
                                     return (
                                       <td
                                         className={
-                                          scoreTotal >= 25
+                                          scoreTotal == 100
                                             ? "bg-green-400 text-right text-[15px]"
                                             : "bg-red-200 text-right text-[15px]"
                                         }
@@ -694,7 +703,7 @@ function ComplianceTrainningRecored() {
           </div>
         </>
       )}
-      
+  
     </>
   );
 }

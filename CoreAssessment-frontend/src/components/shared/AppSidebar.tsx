@@ -14,7 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import MailIcon from '@mui/icons-material/Mail';
 import AlarmIcon from '@mui/icons-material/Alarm';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupIcon from '@mui/icons-material/Group';
 import SchoolIcon from '@mui/icons-material/School';
@@ -190,7 +190,7 @@ const { collapsed, toggleSidebar } = useProSidebar()
                             }
                         }}>
                                    
-                        <SubMenu icon={<AssessmentIcon />} label="สรุปผลการประเมิน">
+                        <SubMenu icon={<AssessmentRoundedIcon />} label="สรุปผลการประเมิน">
               
                                 <Link
                                     to={"/CASAPP/backend/admin/AssessmentRoundReport"}
@@ -330,8 +330,9 @@ const styles = {
         
     },
     avatar: {
-        width: '40%',
-        height: 'auto'
+        width: '45%',
+        height: 'auto',
+        marginBottom: 2
     },
     yourChannel: {
     

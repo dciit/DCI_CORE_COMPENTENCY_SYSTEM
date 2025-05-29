@@ -8,6 +8,7 @@ import evalutedEmployeeReducer from './evalutedEmployeeReducer'
 import timeoutCounterReducer from './timeoutCounterReducer'
 import approveTrackingReducer from './approveTrackingReducer'
 import ccAttendanceRecordReducer from './complianceTrainingRecord/ccAttendanceRecordReducer'
+import trainingScheduleReducer from './TIS/trainingScheduleReducer'
 const rootReducer = combineReducers({
     trackingStateReducer: trackingReducer,
     calculateSroceStateReducer:calculateSroceReducer,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     employeeEvalutedListStateReducer : evalutedEmployeeReducer,
     timeoutCounterStateReducer: timeoutCounterReducer,
     approveTrackingStateReducer: approveTrackingReducer,
-    ccAttendanceRecordStateReducer:ccAttendanceRecordReducer
+    ccAttendanceRecordStateReducer:ccAttendanceRecordReducer,
+    trainingScheduleStateReducer : trainingScheduleReducer
 
 })
 

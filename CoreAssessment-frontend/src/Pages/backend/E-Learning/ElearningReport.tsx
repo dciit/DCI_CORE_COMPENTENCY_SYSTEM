@@ -37,7 +37,7 @@ import SystemSecurityUpdateWarningIcon from "@mui/icons-material/SystemSecurityU
 // import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { mkConfig, generateCsv, download } from "export-to-csv";
-
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 // import Table from "@mui/material/Table";
 // import TableBody from "@mui/material/TableBody";
 // import TableCell from "@mui/material/TableCell";
@@ -122,7 +122,7 @@ function ElearningReport() {
   const [dataArrayListSection2, setdataArrayListSection2] = useState<any>([]);
   const [aryEmpLearningSection2, setaryEmpLearningSection2] = useState<number[]>([]);
   const [aryCountEmpInSection,setaryCountEmpInSection] = useState<number[]>([]);
-  const [target, settarget] = useState<number[]>([]);
+  // const [target, settarget] = useState<number[]>([]);
   //@ts-ignore
   const [titleTablTitle, settTablTitle] =
     useState<string>("CC001 Anti-Bribery");
@@ -261,11 +261,12 @@ function ElearningReport() {
     const res: any = await SrvElearning.getChartSection2(cc);
     try {
       // โหลด section2
+
       setLabels(res.labelChart.sect_name);
       setdataArrayListSection2(res.dataArrayListSection2);
       setLabels(res.labelChart);
       setdataArrayListSection2(res.dataChart);
-      settarget(res.target);
+      // settarget(res.target);
       setaryCountEmpInSection(res.countTotalEmployeeInSection)
       setaryEmpLearningSection2(res.countEmployeeIsLearing);
       setloadAPI2(false);
@@ -458,29 +459,30 @@ function ElearningReport() {
     datasets: [
       {
         label: titleTablTitle,
-        // barPercentage: 1,
         data: dataArrayListSection2,
         backgroundColor:
-          titleTablTitle == "CC001 Anti-Bribery" ? "#00bfff" : (
-          titleTablTitle == "CC002 Trade Secret" ? "orange" :(
-          titleTablTitle == "CC003 PDPA" ? "gray" :(
-          titleTablTitle == "CC004 Security Export" ? "#F33A6A" : 
-            "purple"))),
+          titleTablTitle == "CC001 Anti-Bribery" ? "#88A27C" : (
+          titleTablTitle == "CC002 Trade Secret" ? "#DDA9A0" :(
+          titleTablTitle == "CC003 PDPA" ? "#D6B55E" :(
+          titleTablTitle == "CC004 Security Export" ? "#5B8DB8" : 
+            "#9B8FBF"))),
         order: 2,
+   
       },
 
-      {
-        label: "Target 25 %",
-        data: target,
-        borderColor: "green",
-        backgroundColor: "green",
-        type: "line",
-        pointRadius: 0 ,
-        order: 1,
-        datalabels: {
-          display: false // Enable labels for this dataset
-      }
-      },
+      // {
+      //   label: "Target 25 %",
+      //   data: target,
+      //   borderColor: "green",
+      //   backgroundColor: "green",
+      //   type: "line",
+
+      //   pointRadius: 5 ,
+      //   order: 1,
+      //   datalabels: {
+      //     display: false // Enable labels for this dataset
+      // }
+      // },
     ],
   };
 
@@ -490,6 +492,7 @@ function ElearningReport() {
 
   //@ts-ignore
   const attendanceEmployee = (event: any) => {
+    
     dispatch({
       type: "KEEP_SECTION",
       payload: {
@@ -551,6 +554,10 @@ function ElearningReport() {
       fetchDataSection2("CC005");
       settTablTitle("CC005 Whistle blowing");
     }
+    else if (newValue == 5) {
+      fetchDataSection2("CC006");
+      settTablTitle("CC006 Antitrust");
+    }
   };
   const handleExportData = () => {
     const csv = generateCsv(csvConfig)(data);
@@ -575,14 +582,18 @@ function ElearningReport() {
       return "Open Oct 1, 24";
     } else if (textNew[0] == "0" && index == 4) {
       return "Open Dec 2, 24";
-    } else {
+    } 
+    else if (textNew[0] == "0" && index == 5) {
+      return "Open Jul, 25";
+    }
+    else {
       return textNew[0] + "%";
     }
   }
 
   function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
-
+  
     return (
       <div
         role="tabpanel"
@@ -600,21 +611,23 @@ function ElearningReport() {
 
   return (
     <>
+
+     
       {loadAPI ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          marginTop={10}
-        >
-          <CircularProgress />
-        </Box>
+        <div
+         className="flex flex-col justify-center items-center h-screen w-screen gap-5 bg-slate-300"
+        > 
+        <div> <CircularProgress size={100}/></div>
+        <div> <p className="text-2xl"> กําลังโหลด ....</p></div>
+         
+        
+        </div>
       ) : (
         <>
           <>
             <div className="bg-slate-300 text-center p-4">
             <p className="bg-slate-300 text-end text-sm">
-                V.1.0.2
+                V.1.0.5
               </p>
               <p className="text-5xl w-full mb-4">
                 หลักสูตรการปฏิบัติตามกฏระเบียบออนไลน์ (ComplianceCourse TrainingRecord)
@@ -835,19 +848,29 @@ function ElearningReport() {
                             }
                             sx={{ fontSize: "50px" }}
                           />
-                        ) : (
+                        ) 
+                       : index == 5 ? (
+                        <AccountBalanceIcon
+                          className={
+                            Tabvalue == 5 ? "animate-bounce w-2 h-6" : ""
+                          }
+                          sx={{ fontSize: "50px" }}
+                        />
+                      ) 
+                        
+                        : (
                           <ReportIcon
                             className={
-                              Tabvalue == 5 ? "animate-bounce w-6 h-6" : ""
+                              Tabvalue == 6 ? "animate-bounce w-6 h-6" : ""
                             }
                             sx={{ fontSize: "50px" }}
                           />
                         )
                       }
                       label={
-                        index != 5 ? (
+                        index != 6 ? (
                           <div>
-                            {/* <p>{item?.course_name?.substring(0, 5)}</p> */}
+                            {/* <p>{item?.course_name?.substring(0, 5)}</p > */}
                             <p>
                               {item?.course_name?.substring(
                                 5,
@@ -877,18 +900,20 @@ function ElearningReport() {
 
             <CustomTabPanel value={Tabvalue} index={Tabvalue}>
               {loadAPI2 ? (
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  marginTop={10}
-                >
-                  <CircularProgress />
-                </Box>
+
+                      <div
+                      className="flex flex-col justify-center items-center h-screen w-screen gap-5 bg-orange-50"
+                      > 
+                      <div> <CircularProgress size={50}/></div>
+                      <div> <p className="text-2xl"> กําลังโหลด ....</p></div>
+
+
+                      </div>
+              
               ) : (
                 <>
                   <div className="text-center">
-                    {Tabvalue == 5 ? (
+                    {Tabvalue == 6 ? (
                       <>
                         <ComplianceTrainningRecored />
                       </>
@@ -957,6 +982,7 @@ function ElearningReport() {
         cc={cc}
         onClose={closeDialog}
       />
+    
     </>
   );
 }

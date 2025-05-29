@@ -8,7 +8,7 @@ import "./index.css"
 import App from "./App.tsx";
 import theme from "./Config/theme.ts";
 import { SnackbarProvider } from 'notistack';
-
+import 'preline/preline';
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 

@@ -55,7 +55,7 @@ function EmployeeTrainingRecord() {
     setloadApi(false)
   }
 
-  const maxScaleValue = (LevelSelected + 1) == 1 ? 1500 : (LevelSelected + 1 == 2) ? 140 : (LevelSelected + 1 == 3) ? 100 : (LevelSelected + 1 == 4) ? 30 : (LevelSelected + 1 == 5) ? 30 : 0;
+  const maxScaleValue = (LevelSelected + 1) == 1 ? 1500 : (LevelSelected + 1 == 2) ? 200 : (LevelSelected + 1 == 3) ? 100 : (LevelSelected + 1 == 4) ? 30 : (LevelSelected + 1 == 5) ? 30 : 0;
   let delayed:boolean;
   const data_barchart= {
       labels: label ,

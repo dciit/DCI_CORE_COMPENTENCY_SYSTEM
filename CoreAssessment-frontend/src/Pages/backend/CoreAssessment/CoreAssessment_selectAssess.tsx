@@ -202,6 +202,7 @@ function CoreAssessment_selectAssess() {
       ).then((res) => {
         try {
           setAssessmentCore(res.data);
+          console.log(res.data)
           let _temp: AssessmentScore[] = [];
 
           // pack save data asssessmentScore Main

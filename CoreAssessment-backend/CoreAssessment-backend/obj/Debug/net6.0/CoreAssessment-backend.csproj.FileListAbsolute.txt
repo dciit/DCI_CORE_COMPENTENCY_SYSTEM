@@ -64,3 +64,7 @@ D:\Project\2023\CompetencyAssessment\CoreAssessment-backend\CoreAssessment-backe
 D:\Project\2023\CompetencyAssessment\CoreAssessment-backend\CoreAssessment-backend\obj\Debug\net6.0\CoreAssessment-backend.pdb
 D:\Project\2023\CompetencyAssessment\CoreAssessment-backend\CoreAssessment-backend\obj\Debug\net6.0\CoreAssessment-backend.genruntimeconfig.cache
 D:\Project\2023\CompetencyAssessment\CoreAssessment-backend\CoreAssessment-backend\obj\Debug\net6.0\ref\CoreAssessment-backend.dll
+D:\Project\2023\CompetencyAssessment\CoreAssessment-backend\CoreAssessment-backend\bin\Debug\net6.0\System.Net.Http.Formatting.dll
+D:\Project\2023\CompetencyAssessment\CoreAssessment-backend\CoreAssessment-backend\bin\Debug\net6.0\System.Web.Http.dll
+D:\Project\2023\CompetencyAssessment\CoreAssessment-backend\CoreAssessment-backend\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\Project\2023\CompetencyAssessment\CoreAssessment-backend\CoreAssessment-backend\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

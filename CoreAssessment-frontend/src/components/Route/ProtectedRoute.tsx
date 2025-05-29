@@ -9,6 +9,7 @@ const ProtectedRoute = ({ redirectPath ="/",children}: any) => {
         return <Navigate to={redirectPath} />
     }
     return children
+    
 }
 
 export default ProtectedRoute

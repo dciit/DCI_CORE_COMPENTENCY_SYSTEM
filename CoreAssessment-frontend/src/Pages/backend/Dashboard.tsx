@@ -70,7 +70,7 @@ function Dashboard() {
     const authenStep = useSelector((state:any) => state.authenStateReducer.userAuthenData);
 
 
-  const [dashboardBarChart, setdashboardBarChart] = useState<MainDashBoardChart[]>([]);
+  // const [dashboardBarChart, setdashboardBarChart] = useState<MainDashBoardChart[]>([]);
   // @ts-ignore
   const [dashboardPieDVCDChart, setdashboardPieDVCDChart] = useState<string[]>([]);
   // @ts-ignore
@@ -93,8 +93,8 @@ function Dashboard() {
      const [EmpEvalutePercent, setEmpEvalutePercent] = useState<number[]>([]);
   
     // donut chart
-    const [labelsDonutChart, setlabelsDonutChart] = useState<string[]>([]);
-    const [dataDonutChart, setdataDonutChart] = useState<number[]>([]);
+    // const [labelsDonutChart, setlabelsDonutChart] = useState<string[]>([]);
+    // const [dataDonutChart, setdataDonutChart] = useState<number[]>([]);
 
         // Pie chart
     const [labelsPieChart, setlabelsPieChart] = useState<string[]>([]);
@@ -125,10 +125,10 @@ function Dashboard() {
      }
 
     const dashboard: any = await getDashboards(payload);
-    const res: any = await SrvDashboard.getBarChart(authenStep.empcode);
+    //const res: any = await SrvDashboard.getBarChart(authenStep.empcode);
     try {
       
-      setdashboardBarChart(res.data)
+      //setdashboardBarChart(res.data)
       setcountEmployeeInSection(dashboard.count_empInSection)
       setcountEmployeePendding(dashboard.count_empWaitConfirmPending)
       setcountEmployeeNotEaluted(dashboard.count_empApprove)
@@ -143,11 +143,27 @@ function Dashboard() {
         setCountEmpInSection(dashboard.countTotalEmployeeInSection)
 
         // pie chart
-        setlabelsDonutChart(dashboard.coreLevel_pie)
-        setdataDonutChart(dashboard.totalEmp_pie)
+        // setlabelsDonutChart(dashboard.coreLevel_pie)
+        // setdataDonutChart(dashboard.totalEmp_pie)
 
         // donut chart
-        setlabelsPieChart(dashboard.coreLevel_donut)
+        let ary_donut:string[] = []
+        dashboard.coreLevel_donut.forEach((element:string) => {
+          if(element.includes("1")){
+            ary_donut.push("LV1 : Operator , Leader")
+          }else if(element.includes("2")){
+            ary_donut.push("LV2 : Foreman,Technician,Staff")
+          }else if(element.includes("3")){
+              ary_donut.push("LV3 : Engineer")
+          }else if(element.includes("4")){
+              ary_donut.push("LV4 : Supervisor")
+          }else if(element.includes("5")){
+              ary_donut.push("LV5 : Manager")
+          }
+          
+         
+        });
+        setlabelsPieChart(ary_donut)
         setdataPieChart(dashboard.totalEmp_donut)
 
       setloadAPI(false) 
@@ -179,22 +195,22 @@ function Dashboard() {
     };
 
 
-    const data_donutChart= {
-      labels: labelsDonutChart,
-      datasets: [{
-        label: 'จำนวนคนที่ประเมิน',
-        data: dataDonutChart,
-        backgroundColor: [
-          '#0088FE',
-          'rgb(255, 171, 0)',
-          'rgb(81, 25, 183)',
-          'rgb(255, 86, 48)',
-          '#00C49F'
-        ],
-        hoverOffset: 20
-      }]
-    };
-
+    // const data_donutChart= {
+    //   labels: labelsDonutChart,
+    //   datasets: [{
+    //     label: 'จำนวนคนที่ประเมิน',
+    //     data: dataDonutChart,
+    //     backgroundColor: [
+    //       '#0088FE',
+    //       'rgb(255, 171, 0)',
+    //       'rgb(81, 25, 183)',
+    //       'rgb(255, 86, 48)',
+    //       '#00C49F'
+    //     ],
+    //     hoverOffset: 20
+    //   }]
+    // };
+    
     const data_pieChart= {
       labels: labelsPieChart,
       datasets: [{
@@ -447,7 +463,7 @@ function Dashboard() {
         </div>
 
 
-        <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4 gap-4 mt-10'> 
+        {/* <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4 gap-4 mt-10'> 
                     <div className='w-full h-[550px] border border-gray shadow-2xl p-8 sm:col-span-1 md:col-span-1 lg:col-span-3 rounded-xl' >
 
                     <Carousel animation="fade" navButtonsAlwaysVisible>
@@ -592,7 +608,7 @@ function Dashboard() {
 
 
 
-        </div>
+        </div> */}
     </div>
   )}
 

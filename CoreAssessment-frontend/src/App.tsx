@@ -32,6 +32,11 @@ import ManageRoleAssessment from "./Pages/backend/ADMIN/ManageRoleAssessment";
 import EmployeeTrainingRecord from "./Pages/backend/ADMIN/EmployeeTrainingRecord";
 import CoreAttendance from "./Pages/backend/ADMIN/CoreAttendance";
 import TisExportHistory from "./Pages/TIS/TisExportHistory";
+import TisSchedule from "./Pages/TIS/TisSchedule";
+import TisTrainee from "./Pages/TIS/TisTrainee";
+import Organization from "./Pages/backend/ADMIN/Organization";
+import 'preline/preline';
+import AuthLayout from "./components/layout/AuthLayout";
 // import SelectLabels from "./Pages/backend/ComplianceReport/SelectLabels";
 
 function App() {
@@ -44,9 +49,10 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          {/* <Route element={<AuthLayout />}> */}
+          <Route element={<AuthLayout />}>
             <Route path={`${BASE}`} element={<Login/>} />
             <Route path={`${BASE}/*`} element={<Login/>} />
+              </Route>
           <Route element={<ProtectedRoute><BackendLayout /></ProtectedRoute>}>
               <Route path={`/${BASE}/backend/dashboard`} element={<AssessmentUserRole><Dashboard /></AssessmentUserRole>} />
               <Route element={<AssessmentUserRole><CoreAssessmentLayout/></AssessmentUserRole>} >    
@@ -74,16 +80,20 @@ function App() {
             <Route path={`/${BASE}/backend/admin/dashboard`} element={<AssessmentUserRole><AdminDashboard/></AssessmentUserRole>}/>                   
             <Route path={`/${BASE}/backend/core-assessmentList-report/:empcode`} element={<AssessmentUserRole><DisplayEmployee/></AssessmentUserRole>}/>                   
             <Route path={`/${BASE}/backend/admin/setAssessmentRound`} element={<AdminRole><ManageCompentencyRound/></AdminRole>}/>
-            <Route path={`/${BASE}/backend/admin/ManageRoleAssessment`} element={<AdminRole><ManageRoleAssessment/></AdminRole>}/>                   
+            <Route path={`/${BASE}/backend/admin/ManageRoleAssessment`} element={<AdminRole><Organization/></AdminRole>}/>                   
             <Route path={`/${BASE}/backend/admin/employeeTrainingRecord`} element={<AdminRole><EmployeeTrainingRecord/></AdminRole>}/>
             <Route path={`/${BASE}/backend/admin/AssessmentRoundReport`} element={<AdminRole><CoreAttendance/></AdminRole>}/>                   
-            <Route path={`/${BASE}/backend/admin/AssessmentRoundReportManager`} element={<AdminRole><CoreAttendanceLV5/></AdminRole>}/>                   
+            <Route path={`/${BASE}/backend/admin/AssessmentRoundReportManager`} element={<AdminRole><CoreAttendanceLV5/></AdminRole>}/>   
+            <Route path={`/${BASE}/backend/admin/organization`} element={<AdminRole><Organization/></AdminRole>}/>                   
+                
 
         
           </Route>
 
           {/* TIS */}
           <Route path={`${BASE}/TIS`} element={<TisExportHistory/>} />
+          <Route path={`${BASE}/DailyTrainingSchedule`} element={<TisSchedule/>} />
+          <Route path={`${BASE}/DailyTrainingSchedule/viewTrainee`} element={<TisTrainee/>} />
 
 
           <Route path={`${BASE}/complianceCourseTrainingRecord`} element={<ComplianceTrainningRecored/>} />

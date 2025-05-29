@@ -2,6 +2,7 @@ import { Box, CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import AppSidebar from "../shared/AppSidebar";
 import AppNavbar from "../shared/AppNavbar";
+import { bg } from "date-fns/locale";
 
 
 function BackendLayout() {
@@ -30,11 +31,12 @@ const styles = {
     bgcolor: "neutral.light",
   },
   mainSection: {
-    mt:1,
-    px: 1,
-    pt:1,
+    mt:0,
+    p: 4,
+    pt:4,
     width: "100%",
-    height: "100%",
+    height: "screen",
+    bgcolor: "#f7f7f7",
     // overflow: "auto",
   },
 };
