@@ -5,6 +5,10 @@
 
 
 ## กระบวนการทำงาน (Flowchart)
+
+![image](https://github.com/user-attachments/assets/c2cc9011-0f78-45d4-afdc-24c930994115)
+
+
 ![image](https://github.com/user-attachments/assets/5b86e676-2413-4bd3-a467-d5af58b86ee7)
 
 
